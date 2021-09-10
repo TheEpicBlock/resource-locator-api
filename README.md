@@ -1,9 +1,21 @@
-# Fabric Example Mod
+# Resource Locator Api
+A simple api to locate assets from mods. Used by [PolyMc](https://github.com/TheEpicBlock/PolyMc) to retrieve models/textures.
+Licensed under MIT.
 
-## Setup
-
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## How to use
+Include Jitpack
+```groovy
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+    //...
+}
+```
+Include the library as a Jar-in-jar.
+```groovy
+dependencies {
+	modImplementation include("com.github.TheEpicBlock:resource-locator-api:<version>")
+}
+```
+Replace `<version>` with the latest version from [here](https://github.com/TheEpicBlock/resource-locator-api/releases)
