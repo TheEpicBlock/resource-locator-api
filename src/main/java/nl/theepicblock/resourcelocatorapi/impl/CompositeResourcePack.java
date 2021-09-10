@@ -35,7 +35,7 @@ public class CompositeResourcePack implements ExtendedResourcePack, AutoCloseabl
     }
 
     @Override
-    public @NotNull InputStream getFile(String namespace, String path) throws IOException {
+    public @NotNull InputStream getAsset(String namespace, String path) throws IOException {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) throw new FileNotFoundException();
 
@@ -49,7 +49,7 @@ public class CompositeResourcePack implements ExtendedResourcePack, AutoCloseabl
     }
 
     @Override
-    public boolean contains(String namespace, String path) {
+    public boolean containsAsset(String namespace, String path) {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return false;
 

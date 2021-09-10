@@ -2,13 +2,10 @@ package nl.theepicblock.resourcelocatorapi.api;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 public interface ExtendedResourcePack {
-    String ASSETS = "assets/";
-
     String MODELS = "models/";
     String TEXTURES = "textures/";
     String SOUNDS = "sounds/";
@@ -53,11 +50,11 @@ public interface ExtendedResourcePack {
      * @param path  Example: "item/testtexture" will get "assets/minecraft/textures/item/testtexture.png".
      */
     default @NotNull TextureInputStreams getTexture(String namespace, String path) throws IOException {
-        InputStream texture = getFile(namespace, TEXTURES + path + ".png");
+        InputStream texture = getAsset(namespace, TEXTURES + path + ".png");
         
         var metaPath = TEXTURES + path + ".png.mcmeta";
-        if (this.contains(namespace, metaPath)) {
-            return new TextureInputStreams(texture, getFile(namespace, path));
+        if (this.containsAsset(namespace, metaPath)) {
+            return new TextureInputStreams(texture, getAsset(namespace, path));
         } else {
             return new TextureInputStreams(texture, null);
         }
@@ -66,12 +63,7 @@ public interface ExtendedResourcePack {
     /**
      * @param path  Example: "models/item/testitem.json" will get "assets/minecraft/models/item/testitem.json".
      */
-    default @NotNull InputStream getAsset(String namespace, String path) throws IOException {
-        return getFile(namespace, ASSETS+namespace+"/"+path);
-    }
+    @NotNull InputStream getAsset(String namespace, String path) throws IOException;
 
-    @NotNull
-    InputStream getFile(String namespace, String path) throws IOException;
-
-    boolean contains(String namespace, String path);
+    boolean containsAsset(String namespace, String path);
 }
