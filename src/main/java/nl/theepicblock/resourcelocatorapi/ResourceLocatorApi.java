@@ -12,7 +12,7 @@ public class ResourceLocatorApi implements ModInitializer {
 		
 	}
 
-	public static ExtendedResourcePack getGlobalResourcePack() {
+	public static ExtendedResourcePack createGlobalResourcePack() {
 		var compositePack = new CompositeResourcePack(ResourceType.CLIENT_RESOURCES);
 		ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER.register(compositePack::append);
 		return compositePack;
