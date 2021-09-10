@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "resource-locator-api",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "resource locator api",
+  "description": "Library to locate mod resources",
   "authors": [
-    "Me!"
+    "TheEpicBlock"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/TheEpicBlock/resource-locator-api/blob/master/README.md",
+    "sources": "https://github.com/TheEpicBlock/resource-locator-api"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/resource-locator-api/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "nl.theepicblock.resourcelocatorapi.ResourceLocatorApi"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "resource-locator-api.mixins.json"
   ],
 
   "depends": {
