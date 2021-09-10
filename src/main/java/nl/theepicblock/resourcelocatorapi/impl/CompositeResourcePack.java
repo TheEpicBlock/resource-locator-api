@@ -1,6 +1,8 @@
 package nl.theepicblock.resourcelocatorapi.impl;
 
-import net.minecraft.resource.*;
+import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import nl.theepicblock.resourcelocatorapi.api.ExtendedResourcePack;
 import org.jetbrains.annotations.NotNull;
