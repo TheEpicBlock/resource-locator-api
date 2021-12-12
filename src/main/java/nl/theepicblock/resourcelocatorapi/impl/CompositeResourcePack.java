@@ -4,7 +4,7 @@ import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import nl.theepicblock.resourcelocatorapi.api.ExtendedResourcePack;
+import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -15,9 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CompositeResourcePack implements ExtendedResourcePack, AutoCloseable {
+public class CompositeResourcePack implements AssetContainer {
+    /**
+     * All packs contained in this compositepack
+     */
     private final List<ResourcePack> resourcePacks = new ArrayList<>();
+    /**
+     * For every namespace, this map contains a list of {@link ResourcePack}'s that contain assets in that namespace. For optimization purposes.
+     */
     private final Map<String, List<ResourcePack>> packsPerNamespace = new HashMap<>();
+    /**
+     * The {@link ResourceType} that this resource pack is. (data packs are a type of resource pack)
+     */
     private final ResourceType type;
 
     public CompositeResourcePack(ResourceType type) {
@@ -28,6 +37,9 @@ public class CompositeResourcePack implements ExtendedResourcePack, AutoCloseabl
         append(packProfile.createResourcePack());
     }
 
+    /**
+     * Adds a {@link ResourcePack} to the composite pack, making all of it's assets available
+     */
     public void append(ResourcePack pack) {
         resourcePacks.add(pack);
 
@@ -71,3 +83,4 @@ public class CompositeResourcePack implements ExtendedResourcePack, AutoCloseabl
         }
     }
 }
+

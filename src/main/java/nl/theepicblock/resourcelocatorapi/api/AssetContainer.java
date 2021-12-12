@@ -5,7 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface ExtendedResourcePack {
+/**
+ * Manages mod assets.
+ */
+public interface AssetContainer extends AutoCloseable {
     String MODELS = "models/";
     String TEXTURES = "textures/";
     String SOUNDS = "sounds/";
@@ -61,9 +64,21 @@ public interface ExtendedResourcePack {
     }
 
     /**
-     * @param path  Example: "models/item/testitem.json" will get "assets/minecraft/models/item/testitem.json".
+     * Retrieves an {@link InputStream} to an asset.
+     *
+     * Example:
+     * <pre>{@code
+     * var assetContainer = ..;
+     * var inputstream = assetContainer.getAsset("mymod", "models/item/testitem.json");
+     * }</pre>
+     *
+     * @param namespace Namespace containing the resource
+     * @param path  Path to the resource
      */
     @NotNull InputStream getAsset(String namespace, String path) throws IOException;
 
+    /**
+     * Checks if an asset exists. Uses the same lookup logic as {@link #getAsset(String, String)}
+     */
     boolean containsAsset(String namespace, String path);
 }
