@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CompositeResourcePack implements AssetContainer {
     /**
@@ -60,6 +57,28 @@ public class CompositeResourcePack implements AssetContainer {
             }
         }
         throw new FileNotFoundException();
+    }
+
+    @Override
+    public @NotNull List<InputStream> getAllAssets(String namespace, String path) throws IOException {
+        var packs = packsPerNamespace.get(namespace);
+        if (packs == null) return Collections.emptyList();
+
+        var id = new Identifier(namespace, path);
+        var list = new ArrayList<InputStream>();
+
+        for (var pack : packs) {
+            if (pack.contains(type, id)) {
+                list.add(pack.open(type, id));
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public @NotNull Set<String> getNamespaces() {
+        return packsPerNamespace.keySet();
     }
 
     @Override
