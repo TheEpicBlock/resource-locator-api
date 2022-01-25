@@ -96,6 +96,17 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
+    public @NotNull Set<Identifier> locateLanguageFiles() {
+        var returnSet = new HashSet<Identifier>();
+        for (var pack : this.resourcePacks) {
+            for (var namespace : pack.getNamespaces(type)) {
+                returnSet.addAll(pack.findResources(type, namespace, "lang", 1, (path) -> path.endsWith(".json")));
+            }
+        }
+        return returnSet;
+    }
+
+    @Override
     public void close() throws Exception {
         for (var pack : resourcePacks) {
             pack.close();

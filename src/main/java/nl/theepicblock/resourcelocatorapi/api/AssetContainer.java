@@ -1,5 +1,6 @@
 package nl.theepicblock.resourcelocatorapi.api;
 
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -40,4 +41,6 @@ public interface AssetContainer extends AutoCloseable {
      * Checks if an asset exists. Uses the same lookup logic as {@link #getAsset(String, String)}
      */
     boolean containsAsset(String namespace, String path);
+
+    @NotNull Set<Identifier> locateLanguageFiles();
 }
