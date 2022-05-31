@@ -15,6 +15,9 @@ repositories {
 		name 'Quilt'
 		url 'https://maven.quiltmc.org/repository/release'
 	}
+	maven {
+		url = uri("https://storage.googleapis.com/devan-maven/")
+	}
 }
 
 dependencies {
@@ -26,6 +29,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fapi_version}"
 
 	modCompileOnly "org.quiltmc.qsl.core:resource_loader:${project.qsl_version}"
+
+	modImplementation("net.devtech:arrp:0.5.7")
 }
 
 processResources {
