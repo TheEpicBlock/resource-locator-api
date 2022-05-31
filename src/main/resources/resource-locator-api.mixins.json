@@ -4,7 +4,9 @@
   "package": "nl.theepicblock.resourcelocatorapi.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MixinQsl"
+    "MixinQsl",
+    "MoreContextFapi",
+    "MoreContextQsl"
   ],
   "injectors": {
     "defaultRequire": 1

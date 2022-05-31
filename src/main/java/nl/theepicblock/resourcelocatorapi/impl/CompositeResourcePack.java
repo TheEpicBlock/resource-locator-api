@@ -107,6 +107,23 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append("Resource Locator API - Composite resource pack");
+        for (var pack : resourcePacks) {
+            String name;
+            if (pack instanceof MoreContextPack moreContextPack) {
+                name = moreContextPack.resourcelocatorapi$getFullName();
+            } else {
+                name = pack.getName();
+            }
+            builder.append("\n - ").append(name);
+        }
+
+        return builder.toString();
+    }
+
+    @Override
     public void close() throws Exception {
         for (var pack : resourcePacks) {
             pack.close();
