@@ -16,7 +16,7 @@ public class CompositeResourcePack implements AssetContainer {
     /**
      * All packs contained in this compositepack
      */
-    private final List<ResourcePack> resourcePacks = new ArrayList<>();
+    private final Set<ResourcePack> resourcePacks = new LinkedHashSet<>();
     /**
      * For every namespace, this map contains a list of {@link ResourcePack}'s that contain assets in that namespace. For optimization purposes.
      */
@@ -38,10 +38,12 @@ public class CompositeResourcePack implements AssetContainer {
      * Adds a {@link ResourcePack} to the composite pack, making all of it's assets available
      */
     public void append(ResourcePack pack) {
-        resourcePacks.add(pack);
+        if (!resourcePacks.contains(pack)) {
+            resourcePacks.add(pack);
 
-        for (var namespace : pack.getNamespaces(type)) {
-            packsPerNamespace.computeIfAbsent(namespace, value -> new ArrayList<>()).add(pack);
+            for (var namespace : pack.getNamespaces(type)) {
+                packsPerNamespace.computeIfAbsent(namespace, value -> new ArrayList<>()).add(pack);
+            }
         }
     }
 
