@@ -30,7 +30,7 @@ dependencies {
 
 	modCompileOnly "org.quiltmc.qsl.core:resource_loader:${project.qsl_version}"
 
-	modImplementation("net.devtech:arrp:0.5.7")
+	modCompileOnly("net.devtech:arrp:${project.arrp_version}")
 }
 
 processResources {
