@@ -102,7 +102,8 @@ public class CompositeResourcePack implements AssetContainer {
         var returnSet = new HashSet<Identifier>();
         for (var pack : this.resourcePacks) {
             for (var namespace : pack.getNamespaces(type)) {
-                returnSet.addAll(pack.findResources(type, namespace, "lang", 1, (path) -> path.endsWith(".json")));
+                Collection<Identifier> identifiers = pack.findResources(type, namespace, "lang", (identifier) -> identifier.getPath().endsWith(".json"));
+                returnSet.addAll(identifiers);
             }
         }
         return returnSet;
