@@ -1,5 +1,5 @@
 plugins {
-	id 'org.quiltmc.loom' version '0.12.+'
+	id 'org.quiltmc.loom' version '0.12.31'
 	id 'maven-publish'
 }
 
@@ -26,9 +26,8 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fapi_version}"
-
-	modCompileOnly "org.quiltmc.qsl.core:resource_loader:${project.qsl_version}"
+	modCompileOnly("org.quiltmc.qsl.core:resource_loader:${project.qsl_version}")
+	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fapi_version}"
 
 	modCompileOnly("net.devtech:arrp:${project.arrp_version}")
 }
