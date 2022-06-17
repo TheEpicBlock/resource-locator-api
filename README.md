@@ -7,7 +7,8 @@ Include Jitpack
 ```groovy
 repositories {
     maven {
-        url "https://jitpack.io"
+        url "https://maven.theepicblock.nl"
+        content { includeGroup("nl.theepicblock") }
     }
     //...
 }
@@ -15,7 +16,7 @@ repositories {
 Include the library as a Jar-in-jar.
 ```groovy
 dependencies {
-	modImplementation include("com.github.TheEpicBlock:resource-locator-api:<version>")
+	modImplementation include("nl.theepicblock:resource-locator-api:<version>")
 }
 ```
 Replace `<version>` with the latest version from [here](https://github.com/TheEpicBlock/resource-locator-api/releases)
