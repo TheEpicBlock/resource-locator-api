@@ -1,6 +1,8 @@
 package nl.theepicblock.resourcelocatorapi.api;
 
+import net.minecraft.resource.InputSupplier;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -24,13 +26,13 @@ public interface AssetContainer extends AutoCloseable {
      * @param namespace Namespace containing the resource
      * @param path  Path to the resource
      */
-    @NotNull InputStream getAsset(String namespace, String path) throws IOException;
+    @NotNull InputSupplier<InputStream> getAsset(String namespace, String path) throws IOException;
 
     /**
      * Retrieves all versions of an asset. This is useful if multiple packs declare the same file.
      * (For example, you can have multiple resource packs defining a 'lang/en_us.json')
      */
-    @NotNull List<InputStream> getAllAssets(String namespace, String path) throws IOException;
+    @NotNull List<InputSupplier<InputStream>> getAllAssets(String namespace, String path) throws IOException;
 
     /**
      * Retrieves a list of all the namespaces defined in this pack.
@@ -42,5 +44,5 @@ public interface AssetContainer extends AutoCloseable {
      */
     boolean containsAsset(String namespace, String path);
 
-    @NotNull Set<Identifier> locateLanguageFiles();
+    @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateLanguageFiles();
 }

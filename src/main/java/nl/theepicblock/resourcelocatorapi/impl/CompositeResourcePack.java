@@ -1,9 +1,12 @@
 package nl.theepicblock.resourcelocatorapi.impl;
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,30 +51,32 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
-    public @NotNull InputStream getAsset(String namespace, String path) throws IOException {
+    public @NotNull InputSupplier<InputStream> getAsset(String namespace, String path) throws IOException {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) throw new FileNotFoundException();
 
         var id = new Identifier(namespace, path);
         for (var pack : packs) {
-            if (pack.contains(type, id)) {
-                return pack.open(type, id);
+            var asset = pack.open(type, id);
+            if (asset != null) {
+                return asset;
             }
         }
         throw new FileNotFoundException();
     }
 
     @Override
-    public @NotNull List<InputStream> getAllAssets(String namespace, String path) throws IOException {
+    public @NotNull List<InputSupplier<InputStream>> getAllAssets(String namespace, String path) throws IOException {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return Collections.emptyList();
 
         var id = new Identifier(namespace, path);
-        var list = new ArrayList<InputStream>();
+        var list = new ArrayList<InputSupplier<InputStream>>();
 
         for (var pack : packs) {
-            if (pack.contains(type, id)) {
-                list.add(pack.open(type, id));
+            var asset = pack.open(type, id);
+            if (asset != null) {
+                list.add(asset);
             }
         }
 
@@ -90,7 +95,7 @@ public class CompositeResourcePack implements AssetContainer {
 
         var id = new Identifier(namespace, path);
         for (var pack : packs) {
-            if (pack.contains(type, id)) {
+            if (pack.open(type, id) != null) {
                 return true;
             }
         }
@@ -98,12 +103,13 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
-    public @NotNull Set<Identifier> locateLanguageFiles() {
-        var returnSet = new HashSet<Identifier>();
+    public @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateLanguageFiles() {
+        var returnSet = new ObjectArraySet<Pair<Identifier, InputSupplier<InputStream>>>();
         for (var pack : this.resourcePacks) {
             for (var namespace : pack.getNamespaces(type)) {
-                Collection<Identifier> identifiers = pack.findResources(type, namespace, "lang", (identifier) -> identifier.getPath().endsWith(".json"));
-                returnSet.addAll(identifiers);
+                pack.findResources(type, namespace, "lang", (identifier, inputStreamSupplier) -> {
+                    returnSet.add(new Pair<>(identifier, inputStreamSupplier));
+                });
             }
         }
         return returnSet;
