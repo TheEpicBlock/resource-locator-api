@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,9 +52,9 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
-    public @NotNull InputSupplier<InputStream> getAsset(String namespace, String path) throws IOException {
+    public @Nullable InputSupplier<InputStream> getAsset(String namespace, String path) {
         var packs = packsPerNamespace.get(namespace);
-        if (packs == null) throw new FileNotFoundException();
+        if (packs == null) return null;
 
         var id = new Identifier(namespace, path);
         for (var pack : packs) {
@@ -62,11 +63,11 @@ public class CompositeResourcePack implements AssetContainer {
                 return asset;
             }
         }
-        throw new FileNotFoundException();
+        return null;
     }
 
     @Override
-    public @NotNull List<InputSupplier<InputStream>> getAllAssets(String namespace, String path) throws IOException {
+    public @NotNull List<InputSupplier<InputStream>> getAllAssets(String namespace, String path) {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return Collections.emptyList();
 
