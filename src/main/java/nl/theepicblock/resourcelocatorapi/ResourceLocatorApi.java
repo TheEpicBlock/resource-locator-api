@@ -3,12 +3,13 @@ package nl.theepicblock.resourcelocatorapi;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
 import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
-import nl.theepicblock.resourcelocatorapi.impl.ArrpProvider;
-import nl.theepicblock.resourcelocatorapi.impl.CompositeResourcePack;
-import nl.theepicblock.resourcelocatorapi.impl.FapiProvider;
-import nl.theepicblock.resourcelocatorapi.impl.QslProvider;
+import nl.theepicblock.resourcelocatorapi.impl.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResourceLocatorApi {
+	public static final Logger LOGGER = LoggerFactory.getLogger("resource-locator-api");
+
 	public static AssetContainer createGlobalAssetContainer() {
 		var loader = FabricLoader.getInstance();
 
@@ -28,6 +29,8 @@ public class ResourceLocatorApi {
 		if (loader.isModLoaded("advanced_runtime_resource_pack")) {
 			ArrpProvider.addPacksAfterVanilla(compositePack);
 		}
+
+		RawFileProvider.addPacks(compositePack);
 
 		return compositePack;
 	}
