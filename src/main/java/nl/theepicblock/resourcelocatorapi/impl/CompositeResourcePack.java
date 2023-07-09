@@ -39,7 +39,7 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     /**
-     * Adds a {@link ResourcePack} to the composite pack, making all of it's assets available
+     * Adds a {@link ResourcePack} to the composite pack, making all of its assets available
      */
     public void append(ResourcePack pack) {
         if (!resourcePacks.contains(pack)) {
