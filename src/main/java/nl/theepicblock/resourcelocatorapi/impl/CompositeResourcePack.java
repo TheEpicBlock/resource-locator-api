@@ -6,7 +6,9 @@ import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Pair;
+import nl.theepicblock.resourcelocatorapi.ResourceLocatorApi;
 import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +58,14 @@ public class CompositeResourcePack implements AssetContainer {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return null;
 
-        var id = new Identifier(namespace, path);
+        Identifier id;
+        try {
+            id = new Identifier(namespace, path);
+        } catch (InvalidIdentifierException e) {
+            ResourceLocatorApi.LOGGER.warn("Trying to retrieve asset at an invalid location: "+e.getMessage());
+            return null;
+        }
+
         for (var pack : packs) {
             var asset = pack.open(type, id);
             if (asset != null) {
@@ -71,7 +80,14 @@ public class CompositeResourcePack implements AssetContainer {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return Collections.emptyList();
 
-        var id = new Identifier(namespace, path);
+        Identifier id;
+        try {
+            id = new Identifier(namespace, path);
+        } catch (InvalidIdentifierException e) {
+            ResourceLocatorApi.LOGGER.warn("Trying to lookup assets at an invalid location: "+e.getMessage());
+            return Collections.emptyList();
+        }
+
         var list = new ArrayList<InputSupplier<InputStream>>();
 
         for (var pack : packs) {
@@ -94,11 +110,15 @@ public class CompositeResourcePack implements AssetContainer {
         var packs = packsPerNamespace.get(namespace);
         if (packs == null) return false;
 
-        var id = new Identifier(namespace, path);
-        for (var pack : packs) {
-            if (pack.open(type, id) != null) {
-                return true;
+        try {
+            var id = new Identifier(namespace, path);
+            for (var pack : packs) {
+                if (pack.open(type, id) != null) {
+                    return true;
+                }
             }
+        } catch (InvalidIdentifierException e) {
+            ResourceLocatorApi.LOGGER.warn("Trying to check if an invalid location contains an asset: "+e.getMessage());
         }
         return false;
     }

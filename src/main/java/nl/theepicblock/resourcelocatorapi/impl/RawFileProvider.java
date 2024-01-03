@@ -5,6 +5,7 @@ import net.minecraft.resource.AbstractFileResourcePack;
 import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 import nl.theepicblock.resourcelocatorapi.ResourceLocatorApi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -141,7 +142,13 @@ public class RawFileProvider {
             var smollPrefix = type.getDirectory()+"/"+namespace+"/";
             this.files.forEach((path, buf) -> {
                 if (path.startsWith(bigPrefix)) {
-                    consumer.accept(new Identifier(namespace, path.substring(smollPrefix.length())), () -> new ByteBufferInputStream(buf));
+                    var idPath = path.substring(smollPrefix.length());
+                    try {
+                        var id = new Identifier(namespace, idPath);
+                        consumer.accept(id, () -> new ByteBufferInputStream(buf));
+                    } catch (InvalidIdentifierException e) {
+                        ResourceLocatorApi.LOGGER.warn("Invalid path in pack, ignoring: "+namespace+":"+idPath);
+                    }
                 }
             });
         }
