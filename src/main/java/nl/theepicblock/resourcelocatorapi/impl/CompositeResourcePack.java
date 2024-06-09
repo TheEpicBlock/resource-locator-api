@@ -145,7 +145,7 @@ public class CompositeResourcePack implements AssetContainer {
             if (pack instanceof MoreContextPack moreContextPack) {
                 name = moreContextPack.resourcelocatorapi$getFullName();
             } else {
-                name = pack.getName();
+                name = pack.getId();
             }
             builder.append("\n - ").append(name);
         }

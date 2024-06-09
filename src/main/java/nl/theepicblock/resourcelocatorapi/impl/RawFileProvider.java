@@ -1,9 +1,8 @@
 package nl.theepicblock.resourcelocatorapi.impl;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resource.AbstractFileResourcePack;
-import net.minecraft.resource.InputSupplier;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.*;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import nl.theepicblock.resourcelocatorapi.ResourceLocatorApi;
@@ -13,10 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -121,7 +117,7 @@ public class RawFileProvider {
         private final Map<String, ByteBuffer> files = new HashMap<>();
 
         private BufferResourcePack(String name) {
-            super(name, true);
+            super(new ResourcePackInfo(name, Text.literal(name), ResourcePackSource.NONE, Optional.empty()));
         }
 
         @Nullable
@@ -182,7 +178,7 @@ public class RawFileProvider {
 
         @Override
         public String resourcelocatorapi$getFullName() {
-            return this.getName();
+            return this.getId();
         }
     }
 
