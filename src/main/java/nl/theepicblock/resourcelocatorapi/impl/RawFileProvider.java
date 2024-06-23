@@ -140,7 +140,7 @@ public class RawFileProvider {
                 if (path.startsWith(bigPrefix)) {
                     var idPath = path.substring(smollPrefix.length());
                     try {
-                        var id = new Identifier(namespace, idPath);
+                        var id = Identifier.of(namespace, idPath);
                         consumer.accept(id, () -> new ByteBufferInputStream(buf));
                     } catch (InvalidIdentifierException e) {
                         ResourceLocatorApi.LOGGER.warn("Invalid path in pack, ignoring: "+namespace+":"+idPath);

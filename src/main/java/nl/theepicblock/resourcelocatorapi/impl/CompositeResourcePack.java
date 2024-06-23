@@ -60,7 +60,7 @@ public class CompositeResourcePack implements AssetContainer {
 
         Identifier id;
         try {
-            id = new Identifier(namespace, path);
+            id = Identifier.of(namespace, path);
         } catch (InvalidIdentifierException e) {
             ResourceLocatorApi.LOGGER.warn("Trying to retrieve asset at an invalid location: "+e.getMessage());
             return null;
@@ -82,7 +82,7 @@ public class CompositeResourcePack implements AssetContainer {
 
         Identifier id;
         try {
-            id = new Identifier(namespace, path);
+            id = Identifier.of(namespace, path);
         } catch (InvalidIdentifierException e) {
             ResourceLocatorApi.LOGGER.warn("Trying to lookup assets at an invalid location: "+e.getMessage());
             return Collections.emptyList();
@@ -111,7 +111,7 @@ public class CompositeResourcePack implements AssetContainer {
         if (packs == null) return false;
 
         try {
-            var id = new Identifier(namespace, path);
+            var id = Identifier.of(namespace, path);
             for (var pack : packs) {
                 if (pack.open(type, id) != null) {
                     return true;
