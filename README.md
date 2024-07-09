@@ -19,4 +19,4 @@ dependencies {
 	modImplementation include("nl.theepicblock:resource-locator-api:<version>")
 }
 ```
-Replace `<version>` with the latest version from [here](https://github.com/TheEpicBlock/resource-locator-api/releases)
+Replace `<version>` with the latest version from [here](https://maven.theepicblock.nl/nl/theepicblock/resource-locator-api/)
