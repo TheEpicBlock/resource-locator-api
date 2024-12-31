@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.6.+'
+	id 'fabric-loom' version '1.8.+'
 	//id 'org.quiltmc.loom' version '1.6.+'
 	id 'maven-publish'
 }
@@ -48,7 +48,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
+	it.options.release = 21
 }
 
 java {

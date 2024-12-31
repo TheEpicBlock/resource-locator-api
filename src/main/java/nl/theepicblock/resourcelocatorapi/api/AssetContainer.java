@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Manages mod assets.
@@ -44,6 +46,8 @@ public interface AssetContainer extends AutoCloseable {
      * Checks if an asset exists. Uses the same lookup logic as {@link #getAsset(String, String)}
      */
     boolean containsAsset(String namespace, String path);
-
-    @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateLanguageFiles();
+    default @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateLanguageFiles() {
+        return locateFiles("lang");
+    };
+    @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateFiles(String prefix);
 }
