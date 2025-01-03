@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class CompositeResourcePack implements AssetContainer {
     /**
@@ -124,11 +125,11 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
-    public @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateLanguageFiles() {
+    public @NotNull Set<Pair<Identifier, InputSupplier<InputStream>>> locateFiles(String prefix) {
         var returnSet = new ObjectArraySet<Pair<Identifier, InputSupplier<InputStream>>>();
         for (var pack : this.resourcePacks) {
             for (var namespace : pack.getNamespaces(type)) {
-                pack.findResources(type, namespace, "lang", (identifier, inputStreamSupplier) -> {
+                pack.findResources(type, namespace, prefix, (identifier, inputStreamSupplier) -> {
                     returnSet.add(new Pair<>(identifier, inputStreamSupplier));
                 });
             }
