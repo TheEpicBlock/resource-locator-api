@@ -70,11 +70,17 @@ public class RawFileProvider {
             while ((entry = zipStream.getNextEntry()) != null) {
                 if (entry.isDirectory()) continue;
 
-                if (entry.getName().startsWith("META-INF/jars")) {
+                if (entry.getName().startsWith("META-INF/jars/") || entry.getName().startsWith("/META-INF/jars/")) {
                     handleFile(pack, zipStream, entry.getName() + " in " + path);
-                } else if (entry.getName().startsWith("assets/")) {
+                } else if (entry.getName().startsWith("assets/") || entry.getName().startsWith("/assets/")) {
                     var buffer = readMod(zipStream);
-                    newPack.putAsset(entry.getName(), buffer);
+                    var split = entry.getName().substring(1).split("/", 3);
+                    if (split.length == 3) {
+                        var id = Identifier.tryParse(split[1], split[2]);
+                        if (id != null) {
+                            newPack.putAsset(id, buffer);
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -114,7 +120,8 @@ public class RawFileProvider {
     }
 
     private static final class BufferResourcePack extends AbstractFileResourcePack implements MoreContextPack {
-        private final Map<String, ByteBuffer> files = new HashMap<>();
+        private final Map<Identifier, ByteBuffer> assets = new HashMap<>();
+        private final Map<Identifier, ByteBuffer> data = new HashMap<>();
 
         private BufferResourcePack(String name) {
             super(new ResourcePackInfo(name, Text.literal(name), ResourcePackSource.NONE, Optional.empty()));
@@ -123,27 +130,29 @@ public class RawFileProvider {
         @Nullable
         @Override
         public InputSupplier<InputStream> openRoot(String... segments) {
-            return this.createSupplier(String.join("/", segments));
+            if (segments.length >= 3) {
+                return this.createSupplier(segments[0].equals("assets") ? ResourceType.CLIENT_RESOURCES : ResourceType.SERVER_DATA,
+                        Identifier.of(segments[0], String.join("/", List.of(segments).subList(2, segments.length)))
+                        );
+            }
+            return null;
         }
 
         @Nullable
         @Override
         public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-            return this.createSupplier(type.getDirectory()+"/"+id.getNamespace()+"/"+id.getPath());
+            return this.createSupplier(type, id);
         }
 
         @Override
         public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer consumer) {
-            var bigPrefix = type.getDirectory()+"/"+namespace+"/"+prefix+"/";
-            var smollPrefix = type.getDirectory()+"/"+namespace+"/";
-            this.files.forEach((path, buf) -> {
-                if (path.startsWith(bigPrefix)) {
-                    var idPath = path.substring(smollPrefix.length());
+            var map = type == ResourceType.CLIENT_RESOURCES ? this.assets : this.data;
+            map.forEach((path, buf) -> {
+                if (path.getNamespace().equals(namespace) && path.getPath().startsWith(prefix)) {
                     try {
-                        var id = Identifier.of(namespace, idPath);
-                        consumer.accept(id, () -> new ByteBufferInputStream(buf));
+                        consumer.accept(path, () -> new ByteBufferInputStream(buf));
                     } catch (InvalidIdentifierException e) {
-                        ResourceLocatorApi.LOGGER.warn("Invalid path in pack, ignoring: "+namespace+":"+idPath);
+                        ResourceLocatorApi.LOGGER.warn("Invalid path in pack, ignoring: "+ path);
                     }
                 }
             });
@@ -151,13 +160,8 @@ public class RawFileProvider {
 
         @Override
         public Set<String> getNamespaces(ResourceType type) {
-            var re = Pattern.compile("assets/([^/]+).*");
-            return this.files.keySet().stream()
-                    .map(fullPath -> {
-                        var matcher = re.matcher(fullPath);
-                        matcher.matches();
-                        return matcher.group(1);
-                    })
+            return (type == ResourceType.CLIENT_RESOURCES ? this.assets : this.data).keySet().stream()
+                    .map(Identifier::getNamespace)
                     .collect(Collectors.toSet());
         }
 
@@ -166,14 +170,19 @@ public class RawFileProvider {
 
         }
 
-        private @Nullable InputSupplier<InputStream> createSupplier(String path) {
-            var buf = files.get(path);
+        private @Nullable InputSupplier<InputStream> createSupplier(ResourceType type, Identifier identifier) {
+            var buf = (type == ResourceType.CLIENT_RESOURCES ? this.assets : this.data).get(identifier);
             if (buf == null) return null;
-            return () -> new ByteBufferInputStream(files.get(path));
+            return () -> new ByteBufferInputStream(buf);
         }
 
-        public void putAsset(String path, ByteBuffer buf) {
-            this.files.put(path, buf);
+        public void putAsset(Identifier id, ByteBuffer buf) {
+            this.assets.put(id, buf);
+        }
+
+
+        public void putData(Identifier id, ByteBuffer buf) {
+            this.data.put(id, buf);
         }
 
         @Override
