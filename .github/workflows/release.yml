@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/loom-cache
@@ -34,12 +34,6 @@ jobs:
 
       - name: Build mod
         run: ./gradlew build
-
-      - name: Upload GitHub release
-        uses: AButler/upload-release-assets@v3.0
-        with:
-          files: 'build/libs/*.jar;!build/libs/*-sources.jar;!build/libs/*-dev.jar'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to Maven
         run: ./gradlew publish -PtebUsername=githubci -PtebPassword=${{ secrets.MAVEN_TOKEN }}
