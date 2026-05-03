@@ -1,7 +1,7 @@
 package nl.theepicblock.resourcelocatorapi.impl;
 
 // import net.devtech.arrp.api.RRPCallback;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.server.packs.PackResources;
 
 import java.util.ArrayList;
 

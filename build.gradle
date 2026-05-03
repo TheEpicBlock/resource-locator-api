@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.14.+'
+	id 'net.fabricmc.fabric-loom' version '1.16.+'
 	//id 'org.quiltmc.loom' version '1.6.+'
 	id 'maven-publish'
 }
@@ -25,10 +25,9 @@ repositories {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fapi_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fapi_version}"
 
 	// modCompileOnly("net.devtech:arrp:${project.arrp_version}")
 }
@@ -49,7 +48,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -58,8 +57,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -75,11 +74,11 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
+			artifact(jar) {
+				builtBy jar
 			}
 			artifact(sourcesJar) {
-				builtBy remapSourcesJar
+				builtBy sourcesJar
 			}
 		}
 	}
