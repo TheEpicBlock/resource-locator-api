@@ -17,7 +17,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.*;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
