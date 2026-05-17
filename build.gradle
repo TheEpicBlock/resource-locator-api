@@ -15,6 +15,13 @@ repositories {
 
 }
 
+sourceSets {
+    test_runner {
+        runtimeClasspath += main.runtimeClasspath + main.output
+        compileClasspath += main.compileClasspath + main.output
+    }
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -50,6 +57,18 @@ java {
 
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+}
+
+task testrunnerJar(type: Jar) {
+    archiveBaseName = "testrunner"
+    archiveVersion = ""
+    from sourceSets.test_runner.output
+}
+
+task jarWithGenericName(type: Copy) {
+    from tasks.jar.archiveFile
+    into 'build/libs/'
+    rename { "resource-locator.jar" }
 }
 
 jar {

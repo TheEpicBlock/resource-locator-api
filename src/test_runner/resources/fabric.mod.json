@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "rla-testrunner",
+  "version": "0.1.0",
+
+  "name": "Test Runner for RLA",
+  "description": "",
+  "authors": [
+  ],
+  "contact": {
+  },
+  "license": "MIT",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "nl.theepicblock.resourcelocatorapi.testrunner.RLATest"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+  },
+  "suggests": {
+  }
+}
