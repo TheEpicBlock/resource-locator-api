@@ -16,18 +16,10 @@ public class ResourceLocatorApi {
 		// Create empty composite pack
 		var compositePack = new CompositeResourcePack(PackType.CLIENT_RESOURCES);
 
-		if (loader.isModLoaded("advanced_runtime_resource_pack")) {
-			ArrpProvider.addPacksBeforeVanilla(compositePack);
-		}
-
 		if (loader.isModLoaded("quilt_resource_loader")) {
 			QslProvider.addPacks(compositePack);
 		} else {
 			FapiProvider.addPacks(compositePack);
-		}
-
-		if (loader.isModLoaded("advanced_runtime_resource_pack")) {
-			ArrpProvider.addPacksAfterVanilla(compositePack);
 		}
 
 		RawFileProvider.addPacks(compositePack);
