@@ -18,6 +18,8 @@ import java.util.List;
 
 public class RLATest implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("RLA-Testrunner");
+    public static final String MODID = "rla-testrunner";
+
     @Override
     public void onInitialize() {
         var nonce = System.getenv("TESTRUNNER_NONCE");
@@ -27,6 +29,11 @@ public class RLATest implements ModInitializer {
         var expects_unparsed = System.getenv("TESTRUNNER_EXPECTS");
         if (expects_unparsed == null) {
             throw new NullPointerException("TESTRUNNER_EXPECTS needs to be set");
+        }
+
+        if (System.getenv("TESTRUNNER_FAPI") != null) {
+            LOGGER.info("Registering packs via fabric api");
+            FabricTest.init();
         }
 
         LOGGER.info("Starting tests");
@@ -53,12 +60,16 @@ public class RLATest implements ModInitializer {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("Tests succeeded");
         try {
             Files.writeString(Path.of("./runner_result"), nonce, StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        LOGGER.info("Tests succeeded");
         System.exit(0);
+    }
+
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }

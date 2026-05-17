@@ -1,3 +1,5 @@
+# Needs python 3.9+
+
 import os
 import random
 import shutil
@@ -52,7 +54,7 @@ def main():
                 fapi,
             ],
             "results": {
-                "basic:test.txt": [ "testfile123" ],
+                "basic:test.txt": [ "testfile1" ],
             }
         },
         "no_fapi": {
@@ -62,7 +64,24 @@ def main():
                 rla,
             ],
             "results": {
-                "basic:test.txt": [ "testfile123" ],
+                "basic:test.txt": [ "testfile1" ],
+            }
+        },
+        "fapi_resource_v1": {
+            "files": [
+                fabric_minecraft,
+                testrunner,
+                rla,
+                fapi,
+            ],
+            "results": {
+                "basic:test.txt": [ "testfile1", "testfile5" ],
+                "rl:test_default_enabled.txt": [ "testfile2" ],
+                "rl:test_always_enabled.txt": [ "testfile6" ],
+                "rl:test_normal.txt": [ ], # Test file should not be found since it should not be active
+            },
+            "env": {
+                "TESTRUNNER_FAPI": "true" # Tell the runner to register some packs via fabric resource loader api v1
             }
         }
     }
@@ -93,6 +112,8 @@ def main():
             "TESTRUNNER_EXPECTS": ";".join([f"{k}={",".join(v)}" for k,v in test["results"].items()]),
             "TESTRUNNER_NONCE": str(random.randint(0,99999999))
         }
+        if "env" in test:
+            env = test["env"] | env
         subprocess.run([java, "-jar", instance_dir / "server.jar"], cwd=instance_dir, timeout=60*10, env=env)
         if not (instance_dir / "runner_result").exists() or read_file(instance_dir / "runner_result") != env["TESTRUNNER_NONCE"]:
             print("Test failed")
