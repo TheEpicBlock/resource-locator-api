@@ -16,11 +16,7 @@ public class ResourceLocatorApi {
 		// Create empty composite pack
 		var compositePack = new CompositeResourcePack(PackType.CLIENT_RESOURCES);
 
-		if (loader.isModLoaded("quilt_resource_loader")) {
-			QslProvider.addPacks(compositePack);
-		} else {
-			FapiProvider.addPacks(compositePack);
-		}
+        FapiProvider.addPacks(compositePack);
 
 		RawFileProvider.addPacks(compositePack);
 
