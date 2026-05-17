@@ -16,7 +16,13 @@ public class ResourceLocatorApi {
 		// Create empty composite pack
 		var compositePack = new CompositeResourcePack(PackType.CLIENT_RESOURCES);
 
-        FapiProvider.addPacks(compositePack);
+        if (loader.isModLoaded("fabric-api")) {
+            try {
+                FapiProvider.addPacks(compositePack);
+            } catch (NoClassDefFoundError e) {
+                LOGGER.warn("Couldn't load fapi compat", e);
+            }
+        }
 
 		RawFileProvider.addPacks(compositePack);
 

@@ -54,6 +54,16 @@ def main():
             "results": {
                 "basic:test.txt": [ "testfile123" ],
             }
+        },
+        "no_fapi": {
+            "files": [
+                fabric_minecraft,
+                testrunner,
+                rla,
+            ],
+            "results": {
+                "basic:test.txt": [ "testfile123" ],
+            }
         }
     }
 
