@@ -38,12 +38,13 @@ public class RLATest implements ModInitializer {
 
         LOGGER.info("Starting tests");
         try (var assets = ResourceLocatorApi.createGlobalAssetContainer()) {
+            LOGGER.info("Using {}", assets);
             for (var entry : expects_unparsed.split(";")) {
                 var key = entry.split("=", 2)[0];
                 var v = entry.split("=",2)[1];
 
                 var keyId = Identifier.parse(key);
-                var vSet = new HashSet<>(List.of(v.split(",")));
+                var vSet = new HashSet<>(v.isBlank() ? List.of() : List.of(v.split(",")));
                 var resultSet = new HashSet<String>();
 
                 for (var f : assets.getAllAssets(keyId.getNamespace(), keyId.getPath())) {
@@ -53,7 +54,7 @@ public class RLATest implements ModInitializer {
                     resultSet.add(r);
                 }
                 if (!vSet.equals(resultSet)) {
-                    LOGGER.error("Test failed! Expected {} found {}", vSet, resultSet);
+                    LOGGER.error("Test failed! Expected {} found {} ({},{})", vSet, resultSet, vSet.size(), resultSet.size());
                     System.exit(1);
                 }
             }

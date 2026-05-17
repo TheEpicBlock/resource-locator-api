@@ -19,7 +19,7 @@ public class ResourceLocatorApi {
         if (loader.isModLoaded("fabric-api")) {
             try {
                 FapiProvider.addPacks(compositePack);
-            } catch (NoClassDefFoundError e) {
+            } catch (LinkageError e) {
                 LOGGER.warn("Couldn't load fapi compat", e);
             }
         }
