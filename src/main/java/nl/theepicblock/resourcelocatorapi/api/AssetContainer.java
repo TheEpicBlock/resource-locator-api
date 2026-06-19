@@ -1,5 +1,6 @@
 package nl.theepicblock.resourcelocatorapi.api;
 
+import com.mojang.datafixers.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.util.Tuple;
 
 /**
  * Manages mod assets.
@@ -44,9 +44,9 @@ public interface AssetContainer extends AutoCloseable {
      */
     boolean containsAsset(String namespace, String path);
 
-    default @NotNull Set<Tuple<Identifier, IoSupplier<InputStream>>> locateLanguageFiles() {
+    default @NotNull Set<Pair<Identifier, IoSupplier<InputStream>>> locateLanguageFiles() {
         return locateFiles("lang");
-    }
+    };
 
-    @NotNull Set<Tuple<Identifier, IoSupplier<InputStream>>> locateFiles(String prefix);
+    @NotNull Set<Pair<Identifier, IoSupplier<InputStream>>> locateFiles(String prefix);
 }
