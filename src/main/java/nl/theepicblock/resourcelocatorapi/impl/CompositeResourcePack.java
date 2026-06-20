@@ -1,5 +1,6 @@
 package nl.theepicblock.resourcelocatorapi.impl;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import nl.theepicblock.resourcelocatorapi.ResourceLocatorApi;
 import nl.theepicblock.resourcelocatorapi.api.AssetContainer;
@@ -14,7 +15,6 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.util.Tuple;
 
 public class CompositeResourcePack implements AssetContainer {
     /**
@@ -122,12 +122,12 @@ public class CompositeResourcePack implements AssetContainer {
     }
 
     @Override
-    public @NotNull Set<Tuple<Identifier, IoSupplier<InputStream>>> locateFiles(String prefix) {
-        var returnSet = new ObjectArraySet<Tuple<Identifier, IoSupplier<InputStream>>>();
+    public @NotNull Set<Pair<Identifier, IoSupplier<InputStream>>> locateFiles(String prefix) {
+        var returnSet = new ObjectArraySet<Pair<Identifier, IoSupplier<InputStream>>>();
         for (var pack : this.resourcePacks) {
             for (var namespace : pack.getNamespaces(type)) {
                 pack.listResources(type, namespace, prefix, (identifier, inputStreamSupplier) -> {
-                    returnSet.add(new Tuple<>(identifier, inputStreamSupplier));
+                    returnSet.add(new Pair<>(identifier, inputStreamSupplier));
                 });
             }
         }
